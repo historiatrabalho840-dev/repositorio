@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Estoque de Grupos</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      color: white;
+      margin-top: 20px;
+    }
+
+    #lista {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      width: 120px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📦 Estoque de Grupos</h1>
+<div id="lista"></div>
+
+<script>
+const url = "https://opensheet.elk.sh/1pVCLdpA0xzZhkgbg1Yi3ML3WY8Q3doivVPDBpA25_c4/Sheet1";
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    const lista = document.getElementById("lista");
+
+    data.forEach(item => {
+      const grupo = item.GRUPOS;
+
+      if (grupo) {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerText = "Grupo " + grupo;
+        lista.appendChild(div);
+      }
+    });
+  })
+  .catch(err => {
+    console.error("Erro:", err);
+  });
+</script>
+
+</body>
+</html>
