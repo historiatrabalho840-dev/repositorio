@@ -17,6 +17,13 @@
       margin-top: 20px;
     }
 
+<input 
+  type="text" 
+  id="busca" 
+  placeholder="🔎 Buscar grupo..." 
+  style="padding:10px; width:250px; border-radius:10px; border:none; margin-top:20px;"
+>
+
     #lista {
       display: flex;
       flex-wrap: wrap;
@@ -50,28 +57,51 @@
 <script>
 const url = "https://opensheet.elk.sh/1pVCLdpA0xzZhkgbg1Yi3ML3WY8Q3doivVPDBpA25_c4/Sheet1";
 
+let dados = [];
+
+function renderizar(listaFiltrada) {
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  listaFiltrada.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerText = "Grupo " + (item.GRUPOS || index + 1);
+
+    lista.appendChild(div);
+  });
+}
+
 function carregarDados() {
   fetch(url)
     .then(res => res.json())
     .then(data => {
-      const lista = document.getElementById("lista");
-      lista.innerHTML = ""; // limpa antes de atualizar
-
-      data.forEach((item, index) => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerText = "Grupo " + (item.GRUPOS || index + 1);
-        lista.appendChild(div);
-      });
+      dados = data;
+      renderizar(dados);
     });
 }
 
-// roda uma vez
+// 🔎 busca em tempo real
+document.getElementById("busca").addEventListener("input", function() {
+  const texto = this.value.toLowerCase();
+
+  const filtrados = dados.filter((item, index) => {
+    const grupo = (item.GRUPOS || index + 1).toString().toLowerCase();
+    const cor = (item.COR || "").toLowerCase();
+
+    return grupo.includes(texto) || cor.includes(texto);
+  });
+
+  renderizar(filtrados);
+});
+
+// carregar inicial
 carregarDados();
 
-// roda automaticamente a cada 5 segundos
+// atualização automática (opcional)
 setInterval(carregarDados, 5000);
-</script>
+</script
 
 </body>
 </html>
